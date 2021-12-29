@@ -1,67 +1,12 @@
 # CollectionSwipableCellExtension
 
-It is the extension for UICollectionView and UITableView which appends buttons to a cell and shows them on cell swiping.  
-   
-### Features:  
-- swipe to delete gesture
-- doesn’t require subclassing of cell class, it’s more useful in case when a third-party cell is already used.
-- the buttons UI are fully customised by providing own layout.
-- right-to-left languages support
+## 说明
 
-![Swipe to delete example](https://raw.githubusercontent.com/KosyanMedia/CollectionSwipableCellExtension/README/example/SwipeToDeleteExample.gif)
+### 这个库是从[CollectionSwipableCellExtension](https://github.com/KosyanMedia/CollectionSwipableCellExtension) fork过来的，感谢原作者的贡献
+### 由于原库未发布到cocoapods公共仓库，无法使用pod进行(可以在podfile中指定git地址集成,但是无法在podspec中作为一个依赖库进行依赖)
+### 因此fork过来后加前缀为 HD_FORK_CollectionSwipableCellExtension 并发布到pods公共仓库 (这里改名的原因是防止作者后期想发布的时候名称已经被占用了，且改的前缀中加 fork 标记非个人实现)
 
-## Install
-
-### Carthage
+集成 
+```ruby
+pod 'HD_FORK_CollectionSwipableCellExtension'
 ```
-github "KosyanMedia/CollectionSwipableCellExtension" ~> 0.0.1
-```
-
-## Using
-
-Initialize the extension object with UITableView or UICollectionView and set a delegate.  
-isEnabled property allows to activate/deactivate functionality.
-
-```swift
-swipableExtension = CollectionSwipableCellExtension(with: tableView)
-swipableExtension?.delegate = self
-swipableExtension?.isEnabled = true
-```
-
-Implement methods of CollectionSwipableCellExtensionDelegate protocol, which returns a layout for buttons and defines what cells are swipable.
-
-```swift
-func isSwipable(itemAt indexPath: IndexPath) -> Bool {
-    return true
-}
-
-func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipableCellLayout? {
-    let actionLayout = CollectionSwipableCellOneButtonLayout(buttonWidth: 100, insets: .zero, direction: .leftToRight)
-    actionLayout.action = { [weak self] in
-        //do something
-    }
-
-    return actionLayout
-}
-```
-
-Call resetSwipableActions() in UITableViewDelegate in order to exclude problems with cell's reuse.
-
-```swift
-func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    cell.resetSwipableActions()
-}
-```
-
-or UICollectionViewDelegate
-
-```swift
-func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-    cell.resetSwipableActions()
-}
-```
-
-## Layout customization
-
-We provide one simple layout CollectionSwipableCellOneButtonLayout. 
-You can customize it by subclassing or create your own layout which implements CollectionSwipableCellLayout protocol.
