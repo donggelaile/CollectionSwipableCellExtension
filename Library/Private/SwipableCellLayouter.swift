@@ -141,7 +141,13 @@ class SwipableCellLayouter {
                 hapticGenerator?.prepare()
             }
         }
-        swipePosition = originSwipePosition + x * directionFactor;
+        let newPosition = originSwipePosition + x * directionFactor
+        if abs(newPosition) < self.layout?.swipingAreaWidth() ?? 0 {
+            swipePosition = newPosition
+        } else {
+            swipePosition = -(self.layout?.swipingAreaWidth() ?? 0)
+        }
+        
         swipeIsFinished = false
     }
 

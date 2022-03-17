@@ -12,8 +12,8 @@ class CollectionSwipableCellHandler: NSObject {
 
     weak var delegate: CollectionSwipableCellExtensionDelegate?
 
-    private let recognizer = UIPanGestureRecognizer()
-    private let tapRecognizer = UITapGestureRecognizer()
+    lazy var recognizer = UIPanGestureRecognizer()
+    lazy var tapRecognizer = UITapGestureRecognizer()
     private let direction: UIUserInterfaceLayoutDirection
     private var layouterInProgress: SwipableCellLayouter?
     private let collection: SwipableActionsCollection

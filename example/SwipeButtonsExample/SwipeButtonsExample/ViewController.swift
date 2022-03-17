@@ -68,9 +68,10 @@ extension ViewController: CollectionSwipableCellExtensionDelegate {
     }
 
     func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipableCellLayout? {
-        let actionLayout = CollectionSwipableCellOneButtonLayout(buttonWidth: 100, insets: .zero, direction: .leftToRight)
+//        let actionLayout = CollectionSwipableCellOneButtonLayout(buttonWidth: 100, insets: .zero, direction: .leftToRight)
+        let actionLayout = CollectionSwipableCellOneButtonLayout(buttonWidth: 100, insets: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10), direction: .rightToLeft, fullOpenInset: 0)
         actionLayout.action = { [weak self] in
-            self?.deleteCell(atIndexPath: indexPath)
+//            self?.deleteCell(atIndexPath: indexPath)
         }
 
         return actionLayout

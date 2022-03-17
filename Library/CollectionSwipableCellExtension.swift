@@ -7,12 +7,13 @@
 //
 
 import Foundation
+import UIKit
 
 /**
  Layout of swipable buttons
  **/
 @objc
-public protocol CollectionSwipableCellLayout: class {
+public protocol CollectionSwipableCellLayout: AnyObject {
 
     /**
      Container view for action buttons
@@ -54,7 +55,7 @@ public protocol CollectionSwipableCellLayout: class {
  Swipable extension delegate
  **/
 @objc
-public protocol CollectionSwipableCellExtensionDelegate: class {
+public protocol CollectionSwipableCellExtensionDelegate: AnyObject {
 
     /**
      Is needed show swipable buttons in cell on indexPath
@@ -78,6 +79,14 @@ public class CollectionSwipableCellExtension: NSObject {
         didSet {
             handler?.delegate = delegate
         }
+    }
+    
+    public var panGesture: UIPanGestureRecognizer? {
+        return handler?.recognizer
+    }
+    
+    public var tapGesture: UITapGestureRecognizer? {
+        return handler?.tapRecognizer
     }
 
     /**
