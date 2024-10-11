@@ -31,8 +31,8 @@ class SwipableCellLayouter {
     private var swipeIsFinished = true
 
     private var finishType: FinishAnimationType = .undefined
-
     private var offsetCollector = OffsetCollector()
+    private var isReset = false
 
     private var hapticGeneratorObject: Any?
     @available(iOS 10.0, *)
@@ -51,6 +51,7 @@ class SwipableCellLayouter {
     private var swipePosition: CGFloat = 0 {
         didSet {
             onSwipe(prevValue: oldValue)
+            self.layout?.swipePositionChanged(oldValue: oldValue, newValue: swipePosition, maxValue: maxActionsVisibleWidth, isReset: self.isReset)
         }
     }
 
@@ -109,12 +110,12 @@ class SwipableCellLayouter {
         contentViewObservation?.invalidate()
         contentViewObservation = nil
 
-        removeButtonsFromCell()
+        removeButtonsFromCell(true)
     }
 
     func open(customVisibleWidth: CGFloat? = nil, animated: Bool) {
         let value = -(customVisibleWidth ?? maxActionsVisibleWidth)
-
+        cellTranslationX = value/2
         if animated {
             performFinishAnimation(toValue: value)
         } else {
@@ -123,13 +124,13 @@ class SwipableCellLayouter {
         }
     }
 
-    func closeAndRemoveActions(animated: Bool) {
+    func closeAndRemoveActions(animated: Bool, _ isReset: Bool = false) {
         if animated {
             performFinishAnimation(toValue: 0) {
                 self.removeButtonsFromCell()
             }
         } else {
-            removeButtonsFromCell()
+            removeButtonsFromCell(isReset)
         }
     }
 
@@ -270,9 +271,10 @@ class SwipableCellLayouter {
         }
     }
 
-    private func removeButtonsFromCell() {
+    private func removeButtonsFromCell(_ isReset: Bool = false) {
+        self.isReset = isReset
         swipePosition = 0
-
+        self.isReset = false
         if let wrapperView = item.view.viewWithTag(kActionsWrapperViewTag) {
             wrapperView.removeFromSuperview()
         }

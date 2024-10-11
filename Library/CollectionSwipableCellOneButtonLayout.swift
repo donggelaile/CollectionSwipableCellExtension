@@ -84,5 +84,9 @@ open class CollectionSwipableCellOneButtonLayout: NSObject, CollectionSwipableCe
     open func hapticFeedbackIsEnabled() -> Bool {
         return false
     }
+    
+    open func swipePositionChanged(oldValue: CGFloat, newValue: CGFloat, maxValue: CGFloat, isReset: Bool) {
+        
+    }
 
 }

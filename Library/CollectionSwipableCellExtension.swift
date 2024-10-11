@@ -49,6 +49,11 @@ public protocol CollectionSwipableCellLayout: AnyObject {
      Use or not haptic feedback on full open
      **/
     func hapticFeedbackIsEnabled() -> Bool
+    
+    /**
+     call back when swipePosition Changed
+     **/
+    func swipePositionChanged(oldValue: CGFloat, newValue: CGFloat, maxValue: CGFloat, isReset: Bool)
 }
 
 /**
@@ -65,7 +70,7 @@ public protocol CollectionSwipableCellExtensionDelegate: AnyObject {
     /**
      Return swipable buttons layout for cell on indexPath
      **/
-    func swipableActionsLayout(forItemAt indexPath: IndexPath) -> CollectionSwipableCellLayout?
+    func swipableActionsLayout(forItemAt indexPath: IndexPath, cell: UIView?) -> CollectionSwipableCellLayout?
 
 }
 
@@ -167,8 +172,8 @@ public extension CollectionSwipableCellExtension {
      Open actions for cell at specified index path
      **/
     @objc
-    func openActionsForCell(at indexPath: IndexPath, animated: Bool = true) {
-        handler?.openActionsForCell(at: indexPath, animated: animated)
+    func openActionsForCell(at indexPath: IndexPath, cell: UICollectionViewCell? = nil, animated: Bool = true) {
+        handler?.openActionsForCell(at: indexPath, cell: cell, animated: animated)
     }
 
     /**
