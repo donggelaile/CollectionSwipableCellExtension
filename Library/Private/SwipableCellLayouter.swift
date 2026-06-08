@@ -64,13 +64,21 @@ class SwipableCellLayouter {
             }
         }
         set {
+            // For LTR: allow values from -maxActionsVisibleWidth to any positive value (close bounce)
+            // For RTL: allow values from any negative value to maxActionsVisibleWidth
+            let clampedValue: CGFloat
+            if direction == .leftToRight {
+                clampedValue = max(newValue, -maxActionsVisibleWidth)
+            } else {
+                clampedValue = min(newValue, maxActionsVisibleWidth)
+            }
             if #available(iOS 9, *) {
-                item.contentView.frame.origin.x = newValue
+                item.contentView.frame.origin.x = clampedValue
                 item.linkedViews.forEach {
-                    $0.frame.origin.x = newValue
+                    $0.frame.origin.x = clampedValue
                 }
             } else {
-                let transform = CGAffineTransform(translationX: newValue, y: 0)
+                let transform = CGAffineTransform(translationX: clampedValue, y: 0)
                 item.contentView.transform = transform
                 item.linkedViews.forEach {
                     $0.transform = transform
@@ -143,11 +151,14 @@ class SwipableCellLayouter {
             }
         }
         let newPosition = originSwipePosition + x * directionFactor
-        if abs(newPosition) < self.layout?.swipingAreaWidth() ?? 0 {
+        let maxWidth = self.layout?.swipingAreaWidth() ?? 0
+        if abs(newPosition) < maxWidth {
             swipePosition = newPosition
-        } else {
-            swipePosition = -(self.layout?.swipingAreaWidth() ?? 0)
+        } else if abs(swipePosition) < maxWidth {
+            // Clamp to max only if not already at max
+            swipePosition = -maxWidth
         }
+        // If already at max and trying to go further, do nothing
         
         swipeIsFinished = false
     }
@@ -311,7 +322,9 @@ class SwipableCellLayouter {
             return
         }
 
-        let width = -cellTranslationX * directionFactor
+        let rawWidth = -cellTranslationX * directionFactor
+        // Clamp container width: no less than 0, no more than maxActionsVisibleWidth
+        let width = max(0, min(rawWidth, maxActionsVisibleWidth))
 
         if direction == .leftToRight {
             containerView.autoresizingMask = [.flexibleLeftMargin, .flexibleHeight]
